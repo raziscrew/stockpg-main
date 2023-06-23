@@ -1,0 +1,266 @@
+@page
+<head>
+    <script defer src="/css/all.js"></script> <!--load all styles -->
+
+</head>
+@using JPGStockServer.Entities
+
+
+<h2 class="content-block">Dashboard</h2>
+<body class="dx-viewport">
+    <div class="demo-container">
+        <div class="list-container">
+            <div id="list">
+                <div data-options="dxTemplate: { name: 'low Stock' }">
+                    <div class="dx-list"></div>
+                </div>
+            </div>
+        </div>
+        @*<div class="History">
+                <div id="history">
+                    <div data-options="dxTemplate: { name: 'history' }">
+                        <div class="dx-datagrid"></div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+
+    <div class="History-container">
+
+        <div class="History">
+            <div id="history">
+                <div data-options="dxTemplate: { name: 'history' }">
+                    <div class="dx-datagrid"></div>
+                </div>
+            </div>
+
+            <div class="dx-filterbuilder">
+                <div id="filterBuilder"></div>
+                <div id="apply"></div>
+            </div>
+        </div>
+
+    </div>
+    
+</body>
+<script>
+    $(function () {
+        //var dateFrom = moment().subtract(1, 'months').endOf('month').format('DD/MM/YYYY'); 
+        var dateSTART = moment().startOf('months').format('YYYY/MM/DD');
+        //var dateEND = moment().endOf('months').format('YYYY/MM/DD');
+        //var DateToday = moment().format('YYYY/MM/DD');
+        var filter = [
+         
+            ["UpdateDate", ">=", dateSTART]
+        ]
+
+        fields = [
+            {
+                dataField: "UpdateDate",
+                dataType: "date",
+                //format:"YYYY-MM-DD"
+            }, {
+                dataField: "STOCK_ID"
+            }
+        ]
+        var filterBuilderInstance = $("#filterBuilder").dxFilterBuilder({
+            fields: fields,
+            value: filter
+        }).dxFilterBuilder("instance");
+
+
+
+
+        $("#apply").dxButton({
+            text: "Apply Filter",
+            type: "default",
+            onClick: function () {
+                var filter = filterBuilderInstance.getFilterExpression(),
+                    dataSource = $(".dx-datagrid").dxList("instance").getDataSource();
+                dataSource.filter(filter);                
+                dataSource.load();
+            },
+        });
+
+        
+        var store = DevExpress.data.AspNet.createStore({
+            loadUrl: "/api/Stocks",
+        });
+
+        var listData = new DevExpress.data.DataSource({
+
+            store: store,
+            paginate: true,
+            pageSize: 1,
+            sort: "STOCK_ID",
+            group: "COMPONENTS_ID",
+            filter: [['IGNORE', '=', null], "and", ["QUANTITY", "<=", 10]],
+        });
+
+        var today = moment().format('YYYY/MM/DD');
+        date = new Date(), "shortDateShortTime";
+        var dateFrom = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD HH:MM:SS'/*'YYYY-MM-DD'*/);
+
+
+        var historyData = new DevExpress.data.DataSource({
+
+            store: store,
+            paginate: true,
+            pageSize: 1,
+            sort: [{ selector: "UpdateDate", desc: true }],
+           
+          
+           // group: "COMPONENTS_ID",
+            //filter: [['UpdateDate', '>=', today ], "and", ['UpdateDate', "<=", today ]], 
+            filter: filterBuilderInstance.getFilterExpression()
+        });
+        var data = [{
+            template: 'low Stock',
+            //template: 'history',
+
+        }]
+        var dataHistory = [{
+            //template: 'low Stock',
+             template: 'history',
+
+        }]
+
+        $("#list").dxAccordion({
+            collapsible: true,
+            dataSource: data,
+            animationDuration: 300,
+           // collapsible: false,
+            multiple: false,
+            itemTitleTemplate: 'Low Stock Monitoring',
+
+
+
+        });
+
+         $(".dx-list").dxList({
+            dataSource: listData,
+            stateStoring: {
+                enabled: true,
+                type: "localStorage",
+                storageKey: "treeListStorage"
+            },
+            map: function (groupedItem) {
+                let overallCount = 0;
+                groupedItem.items.forEach(function (item) {
+                    overallCount += item.count;
+                });
+                return $.extend(groupedItem, { overallCount: overallCount })
+            },
+            itemTemplate: function (data, _, element) {
+
+                //var price = formatCurrency(data.UnitPrice);
+                return $("<div>")
+                    .append($("<div>").text(data.PART_NUMBER))
+                    //.append($("<div>").text(data.ProductName))
+                    .append($("<div>").text(data.IGNORE))
+                    .append($("<b>").text("Quantitiy:" + data.QUANTITY))
+
+
+
+            },
+
+            grouped: true,
+            ExpandAll: false,
+            groupTemplate: function (Data, _, groupElement) {
+                groupElement.append(
+                    $("<p>").text(Data.key + " | " + Data.overallCount)
+                )
+            },
+            collapsibleGroups: true,
+            selectionMode: "multiple",
+            showSelectionControls: true,
+            pageLoadMode: "scrollBottom",
+           
+           
+            height: 600,
+           
+
+            outerWidth: 100
+        });
+
+
+
+
+
+
+        $("#history").dxAccordion({
+            collapsible: true,
+            dataSource: dataHistory,
+            animationDuration: 300,
+            // collapsible: false,
+            multiple: false,
+            itemTitleTemplate: 'History',
+
+
+
+        });
+
+        $(".dx-datagrid").dxList({
+            dataSource: historyData,
+           
+            map: function (groupedItem) {
+                let overallCount = 0;
+                groupedItem.items.forEach(function (item) {
+                    overallCount += item.count;
+                });
+                return $.extend(groupedItem, { overallCount: overallCount })
+            },
+            itemTemplate: function (data, _, element) {
+                
+            
+                var hari = moment(data.UpdateDate).format('DD/MM/YYYY h:mm a');               
+                return $("<div>")
+                    .append("<b>User: </b>")
+                    .append($("<span>").text(data.User))
+                    .append("<div>")
+                    .append("<b>Part Number: </b>")
+                    .append($("<span>").text(data.PART_NUMBER))
+                    .append("<div>")
+                    .append("<b>Update Date: </b>")
+                    .append($("<span>").text(hari))
+                
+              
+
+
+
+            },
+
+            grouped: false,
+            ExpandAll: false,
+            groupTemplate: function (Data, _, groupElement) {
+                groupElement.append(
+                    $("<p>").text(Data.key + " | " + Data.overallCount)
+                )
+            },
+            collapsibleGroups: true,
+            //selectionMode: "multiple",
+            showSelectionControls: false,
+            pageLoadMode: "scrollBottom",
+
+
+            height: 600,
+
+
+            outerWidth: 100
+        });
+
+
+
+
+
+
+
+
+
+        
+
+       
+
+    });
+</script>
+

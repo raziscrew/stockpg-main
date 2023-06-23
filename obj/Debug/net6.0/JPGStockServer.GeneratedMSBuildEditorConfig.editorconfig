@@ -1,0 +1,77 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = JPGStockServer
+build_property.RootNamespace = JPGStockServer
+build_property.ProjectDir = C:\Users\Kingsempai\Desktop\stockpg-main\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Kingsempai\Desktop\stockpg-main
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWJvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/CAPACITOR.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ0FQQUNJVE9SLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/DIODE.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRElPREUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/IC.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSUMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/LCD.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTENELmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/MODULE.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTU9EVUxFLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/MOSFET.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTU9TRkVULmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/OPTOCOUPLER.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT1BUT0NPVVBMRVIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/RESISTOR.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUkVTSVNUT1IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/TRANSISTOR.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVFJBTlNJU1RPUi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Kingsempai/Desktop/stockpg-main/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\bacup\Stock jess publish\WebSite</_PublishTargetUrl>
+    <History>True|2022-09-10T18:35:48.8583337Z;True|2022-09-09T21:23:44.5001965+08:00;True|2022-09-09T20:27:32.0888699+08:00;</History>
+  </PropertyGroup>
+</Project>

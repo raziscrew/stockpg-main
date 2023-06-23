@@ -1,0 +1,953 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <script defer src="~/js/moment.min.js"></script>
+    <script defer src="/css/all.js"></script> <!--load all styles -->
+    <script defer src="~/js/data.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="~/css/flaticon/flaticon.css">
+    @*<link href="~/css/flaticon/flaticon.css" rel="stylesheet" />*@
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>STOCK JESS PG</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    @* Uncomment to use the HtmlEditor control *@
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.6/quill.min.js"></script> *@
+
+
+    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Site.css" />
+    <script src="~/js/vendor.js" asp-append-version="true"></script>
+
+</head>
+
+<body class="dx-viewport">
+    <div id="app-side-nav-outer-toolbar">
+        <div class="layout-header">
+
+            
+            
+
+            @(Html.DevExtreme().Toolbar()
+                        .ID("toolbar")
+                        // .Visible(false)
+                        .Items(items => {
+                        items.Add()
+                                 .Widget(w => w
+                                     .Button()
+                                     .Icon("menu")
+
+                                     .OnClick("DevExtremeAspNetCoreApp11.onMenuButtonClick")
+                                 )
+
+                                 .Location(ToolbarItemLocation.Before)
+                                 .CssClass("menu-button");
+                        items.Add()
+                                 .Html("<div>STOCK JESS PG</div>")
+                                 .Location(ToolbarItemLocation.Before)
+                                 .CssClass("header-title");
+
+            //items.Add()
+            //   .Html("<div>User:</div>")
+            //   .Location(ToolbarItemLocation.After)
+            //    .LocateInMenu(ToolbarItemLocateInMenuMode.Auto)
+            //   .CssClass("header-title");
+
+            items.Add()
+
+                     //.Visible(false)
+
+                     .Html(new JS ("UsernameDisplay"))
+                     .Location(ToolbarItemLocation.After)
+                     .LocateInMenu(ToolbarItemLocateInMenuMode.Auto)
+                     .CssClass("header-title");
+
+
+
+                        items.Add()
+
+
+            .Widget(w => w
+
+              .Button()
+              .ID("LogIn2")
+              .Visible(false)
+              .Icon("fa fa-bell")
+              .OnClick("msgRequestPopup")
+                )
+
+                 .Html(new JS("Notification"))
+
+                // .Html("<span cNotificationlass='crimson-text' Id='try'	style=' background: red;padding: 0px;border-radius: 50px;color: white;position: absolute;font-weight: bold;margin-top: 6px;margin-left: 18px;font-size: 11px; z-index: 1;'>12</span>")
+                 .Location(ToolbarItemLocation.After)
+                 .LocateInMenu(ToolbarItemLocateInMenuMode.Auto)
+                .CssClass("Notifications");
+
+
+
+
+            items.Add()
+               .Widget(w => w
+                   .Button()
+                   .ID("LogIn")
+                   .Text("Login")
+                   .Icon("fas fa-user-secret")
+                   .OnClick(@<text>function() {  $("#ToobarLoginPopup").dxPopup("show")}</text>)
+               )
+
+                 .Location(ToolbarItemLocation.After)
+                 .LocateInMenu(ToolbarItemLocateInMenuMode.Auto)
+                .CssClass("Login-logout-button");
+
+
+
+            items.Add()
+             .Widget(w => w
+
+                 .Button()
+
+                 .ID("LogOut")
+                 .Visible(false)
+                 .Text("LogOut")
+                 .Icon("fas fa-user-secret")
+                 .OnClick("Remove_Token")
+             )
+               .Location(ToolbarItemLocation.After)
+               .LocateInMenu(ToolbarItemLocateInMenuMode.Auto)
+               .CssClass("Login-logout-button");
+
+
+        })
+
+
+
+            )
+        </div>
+        <div class="layout-body layout-body-hidden">
+            @(Html.DevExtreme().Drawer()
+                .ID("layout-drawer")
+                .Position(DrawerPosition.Left)
+                .Opened(new JS("DevExtremeAspNetCoreApp11.restoreDrawerOpened()"))
+                .Content(@<text>
+                    <div id="layout-drawer-scrollview" class="with-footer">
+                        <div class="content">
+
+                            @RenderBody()
+                        </div>
+                        <div id="MsgPopupContainer"></div>
+                        <div id="MsgPopupData"></div>
+                        <div class="content-block">
+                            <div class="content-footer">
+                                <div id="footer">
+                                    Copyright (c) 2020 Razis Inc.
+                                    <br />
+                                    All trademarks or registered trademarks are property of their respective owners.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </text>)
+                .Template(new TemplateName("navigation-menu"))
+            )
+        </div>
+    </div>
+
+
+    @using (Html.DevExtreme().NamedTemplate("navigation-menu"))
+    {
+        <div class="menu-container dx-swatch-additional">
+
+            @functions{
+                string GetUrl(string pageName) => Url.Page(pageName);
+                string GetCurrentUrl() => Url.Page(ViewContext.RouteData.Values["page"].ToString());
+                bool IsCurrentUrl(string pageName) => GetUrl(pageName) == GetCurrentUrl();
+            }
+
+            @(Html.DevExtreme().TreeView()
+                .Items(items => {
+                    items.Add()
+                        .Text("Dashboard")
+                        .Icon("flaticon-speedometer")
+                        .Option("path", GetUrl("Index"))
+                        .Selected(IsCurrentUrl("Index"));
+
+                    items.Add()
+                               .Text("CAPACITOR")
+                               .Icon("flaticon-capacitor")
+                               .Option("path", GetUrl("CAPACITOR"))
+                               .Selected(IsCurrentUrl("CAPACITOR"));
+                    items.Add()
+
+                              .Text("DIODE")
+                              .Icon("flaticon-diode")
+                               .Option("path", GetUrl("DIODE"))
+                              .Selected(IsCurrentUrl("DIODE"));
+                    items.Add()
+
+                                .Text("IC")
+                                .Icon("flaticon-Ic")
+                                .Option("path", GetUrl("IC"))
+                                .Selected(IsCurrentUrl("IC"));
+                    items.Add()
+                               .Text("LCD")
+                               .Icon("flaticon-lcd")
+                               .Option("path", GetUrl("LCD"))
+                               .Selected(IsCurrentUrl("LCD"));
+                    items.Add()
+                                .Text("MODULE")
+                                .Icon("flaticon-pcb-board")
+                                .Option("path", GetUrl("MODULE"))
+                                .Selected(IsCurrentUrl("MODULE"));
+                    items.Add()
+                               .Text("MOSFET")
+                               .Icon("flaticon-Mosfet")
+                               .Option("path", GetUrl("MOSFET"))
+                               .Selected(IsCurrentUrl("MOSFET"));
+                    items.Add()
+                                .Text("OPTOCOUPLER")
+                                .Icon("flaticon-Optocoupler")
+                                .Option("path", GetUrl("OPTOCOUPLER"))
+                                .Selected(IsCurrentUrl("OPTOCOUPLER"));
+                    items.Add()
+                               .Text("RESISTOR")
+                               .Icon("flaticon-resistor")
+                               .Option("path", GetUrl("RESISTOR"))
+                               .Selected(IsCurrentUrl("RESISTOR"));
+                    items.Add()
+                           .Text("TRANSISTOR")
+                           .Icon("flaticon-transistor-1")
+                           .Option("path", GetUrl("TRANSISTOR"))
+                           .Selected(IsCurrentUrl("TRANSISTOR"));
+                    items.Add()
+                      .Text("About")
+                      .Icon("flaticon-about")
+                      .Option("path", GetUrl("About"))
+                      .Selected(IsCurrentUrl("About"));
+                })
+
+                .ExpandEvent(TreeViewExpandEvent.Click)
+                .SelectionMode(NavSelectionMode.Single)
+                .SelectedExpr("selected")
+                .FocusStateEnabled(false)
+                .Width(250)
+                .OnItemClick("DevExtremeAspNetCoreApp11.onTreeViewItemClick")
+            )
+        </div>
+    }
+    @(Html.DevExtreme().Popup()
+        .ShowTitle(true)
+        .Title("Login")
+     .ContentTemplate(@<text>
+<div class="form">
+    <div class="dx-fieldset">
+        <div class="dx-field">
+            <div class="dx-field-label">Usernames</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBox()
+                    .ID("USERNAMEtoolbar")
+                   .Placeholder("Enter Username here...")
+                    .ValueChangeEvent("keyup")
+
+                )
+
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Passwords</div>
+            <div class="dx-field-value">
+                @(Html.DevExtreme().TextBox()
+                    .ID("PASSWORDtoolbar")
+                    .Mode(TextBoxMode.Password)
+                    .Placeholder("Enter Password here...")
+                     .OnValueChanged("showeyeToolbar")
+                     .ValueChangeEvent("keyup")
+                     .Buttons(buttons =>
+                     {
+                buttons.Add()
+                .Name("show_password")
+                .Location(TextEditorButtonLocation.After)
+                .Widget(w => w.Button()
+                    .ID("show_password")
+                    .Visible(false)
+                    .Type(ButtonType.Normal)
+                    .StylingMode(ButtonStylingMode.Text)
+                    .Icon("fas fa-eye")
+                    .OnClick("show_password"));
+
+            buttons.Add()
+                .Name("hide_password")
+                .Location(TextEditorButtonLocation.After)
+                .Widget(w => w.Button()
+                    .ID("hide_password")
+                    .Visible(false)
+                    .Icon("fas fa-eye-slash")
+                    .OnClick("hide_password"));
+        })
+
+
+                )
+            </div>
+        </div>
+    </div>
+</div>
+
+</text>).ID("ToobarLoginPopup")
+.ToolbarItems(toolbarItems =>
+{
+    toolbarItems.Add()
+
+    .Location(ToolbarItemLocation.After)
+    .Toolbar(Toolbar.Bottom)
+                .Widget(w => w
+                   .Button()
+                   .Text("Close")
+
+                   .OnClick(@<text>function() {  $("#ToobarLoginPopup").dxPopup("hide")}</text>)
+                );
+    toolbarItems.Add()
+
+    .Location(ToolbarItemLocation.Center)
+    .Toolbar(Toolbar.Bottom)
+                .Widget(w => w
+                   .Button()
+                   .Text("Login")
+                    .ID("loginbtn")
+                   .OnClick("Toolbarlogin")
+                );
+})
+    //.Position(pos => pos
+    //    .My(HorizontalAlignment.Center, VerticalAlignment.Center)
+    //    .At(HorizontalAlignment.Center, VerticalAlignment.Center)
+    //    .Of("#Windows")
+    //)
+.Height(350)
+.Width(364)
+)
+            <script>
+                let employee = ''
+                let refdata = 0
+
+                //function show_password() {
+                //    var passwordEditor = $("#PASSWORDtoolbar").dxTextBox("instance");
+                //    passwordEditor.option("mode", passwordEditor.option("mode") === "text" ? "password" : "text");
+
+                //    $("#show_password").dxButton("instance").option("visible", false);
+                //    $("#hide_password").dxButton("instance").option("visible", true);
+
+                //}
+                //function hide_password() {
+                //    var passwordEditor = $("#PASSWORDtoolbar").dxTextBox("instance");
+
+                //    passwordEditor.option("mode", passwordEditor.option("mode") === "text" ? "password" : "text");
+                //    $("#show_password").dxButton("instance").option("visible", true);
+                //    $("#hide_password").dxButton("instance").option("visible", false);
+
+                //}
+               
+                function Notification(response) {
+
+                    if (sessionStorage.getItem("Username") == "Admin") {
+                        fetch("/api/Notification/UnredNotifecation", {
+                            method: "GET",
+                            data: JSON.stringify('data'),
+                            headers: {
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        })
+
+                            .then(response => {
+                                return response.json();
+
+                            })
+                            .then(json => {
+
+                                a = json.data.length
+                                console.log(a);
+                             
+                                if (a >= 1) {
+                                    $('.Notifications').append("<span class='Notification-num'>" + a + "</span>")
+                          
+                                   // $('.Notification-num').css('visibility: ', 'visible')
+                                }
+                                else {
+                                    //document.getElementsByClassName('Notification-num').visibility = "hidden";
+                                   // $('.Notification-num').css('visibility: ', 'hidden')
+                                    $(".Notification-num").hide();
+                                   
+                                }
+                               
+                                // console.log("refdata = " + refdata)
+
+                                if (refdata == 1) {
+
+                                    var dataGrid = $("#gridIC").dxDataGrid("instance");
+                                    dataGrid.refresh();
+                                    refdata = 0
+                                } else {
+
+                                }
+                            })
+                    }
+                        
+                    
+                }
+                setInterval(Notification, 1000); //check it each second
+
+                var NotificationUrl = {
+                    "url": "/api/Notification",
+                    "method": "GET",
+                    "timeout": 0,
+                };
+
+                var store = DevExpress.data.AspNet.createStore({
+                    loadUrl: "/api/Notification",
+
+                });
+
+                var listData = new DevExpress.data.DataSource({
+
+                    store: store,
+                    key: "NOTIFICATIONS_ID",
+                    sort: [
+
+                        { selector: "READ", desc: true }
+                    ],
+
+                });
+             
+                function msgRequestPopup() {
+
+                    listData.load()
+                        .done(function (data) {
+                            // Process "data" here
+                           
+                           
+
+                            const MsgList = $('#MsgRequestList').dxList({
+                                dataSource: data,
+                                height: 400,
+                                allowItemDeleting: false,
+                                itemDeleteMode: 'toggle',
+                                itemTemplate(data) {
+                                    const result = $('<div>').addClass('product');
+
+                                    // $('<img>').attr('src', data.ImageSrc).appendTo(result);
+                                    $('<div>').text(data.User).appendTo(result);
+                                    if (data.READ == 1) {
+                                        $('<spin>').text('New').appendTo(result);
+                                    }
+
+                                    return result;
+                                },
+                                selectionMode: "single",
+                                onItemClick: function (e) {
+                                    // Event handling commands go here
+                                    actionSheet.option('target', e.itemElement);
+                                    actionSheet.option('visible', true);
+                                    
+                                   
+                                }
+                            }).dxList('instance');
+
+
+                            const actionSheet = $('#action-sheet').dxActionSheet({
+                                dataSource: actionSheetItems,
+                                title: 'Choose action',
+                                usePopover: true,
+                             
+                                
+                                onCancelClick() {
+                                    showNotify('Cancel');
+                                },
+                                onItemClick(value) {
+                                   
+                                    
+                                    //showNotify(value.itemData.text);
+                                    console.log  (value.itemData.text)
+                                    var butt = value.itemData.text
+                                    const data = MsgList.option('selectedItemKeys')
+
+                                    if (butt == "Open"){
+                                        popupMsgData.option("title", "Request from " + data[0].User)
+                                        popupMsgData.option("visible", true)
+                                        console.log(data[0].NOTIFICATIONS_ID)
+                                        employee = data[0];
+                                        popupMsgData.option({
+                                            contentTemplate: () => msgDataFormTemplate(),
+                                            'position.of': `#image${employee.ID}`,
+                                        });
+                                        popupMsgData.show();
+
+                                    }
+                                    
+                                },
+                            }).dxActionSheet('instance');
+
+                            function showNotify(value) {
+                                DevExpress.ui.notify(`The "${value}" button is clicked.`);
+                            }
+                        })
+                        .fail(function (error) {
+                           alert("sever error")
+                        });
+
+                  
+
+                    $("#MsgPopupContainer").dxPopup("instance").option("visible",true)
+
+                }
+
+                const msgFormTemplate = function () {
+
+
+
+                    return $('<div>').append(
+
+
+                        $("<div >").dxList({
+
+                            elementAttr: {
+                                id: "MsgRequestList",
+
+                            },
+                        }),
+                        $("<div >").dxActionSheet({
+
+                            elementAttr: {
+                                id: "action-sheet",
+
+                            },
+                        }),
+
+                    );
+                };
+
+                const msgDataFormTemplate = function (data) {
+                    var hari = moment(employee.CreateDate).format('DD/MM/YYYY h:mm a');
+                    return $('<div>').append(
+                       // $(`<p class='UserRequest-text'>Request From: <span>${employee.User}</span></p>`),
+                        $(`<p class='MsgDate-text'> Date Request: <span>${hari}</span></p>`),
+                        $(`<p class='RequestPartnumberDetails-text'>Item Part Numbers: <span>${employee.PART_NUMBER}</span></p>`),
+                        $(`<p class='RequestLocationDetails-text'>Item Location: <span>${employee.LOCATION}</span></p>`),
+                        $(`<p class='RequestTypeDetails-text'>Item Type: <span>${employee.COMPONENTS_ID}</span></p>`),
+                        $(`<p class='RequestTypeDetails-text'>Item Type: <span>${employee.QUANTITY}</span></p>`),
+                      //  $(`<p>Hire Date: <span>${employee.HireDate}</span></p>`),
+                     //   $(`<p>Position: <span>${employee.Position}</span></p>`),
+                    );
+
+
+                };
+               
+                const popup = $("#MsgPopupContainer").dxPopup({
+                    title: "User Request ",
+                    visible: false,
+                    contentTemplate: msgFormTemplate,
+                }).dxPopup("instance");
+
+                const popupMsgData = $("#MsgPopupData").dxPopup({
+                    width: 300,
+                    height: 280,
+                    container: '.dx-viewport',
+                    title: "User Request item ",
+                    visible: false,
+                    contentTemplate: msgDataFormTemplate,
+                    showCloseButton: false,
+                    toolbarItems: [{
+                        widget: 'dxButton',
+                        toolbar: 'bottom',
+                        location: 'before',
+                        options: {
+                            icon: 'fa fa-database',
+                            text: 'Update',
+                            onClick() {
+                              //  $("#Take-popupTransistor").dxPopup("show")
+                                console.log(employee.STOCKID)
+                              
+                               // dataGrid.cellValue(focusedRowKey, "QUANTITY", TakeQuentitys);
+                               // dataGrid.saveEditData();
+                               // console.log(TakeQuentitys)
+
+                                var dataGrid = $("#gridIC").dxDataGrid("instance");
+                                var Quantitys = employee.QUANTITY;
+                                var RequestQuantitys = employee.Request_Quantitys;
+                                var user = sessionStorage.getItem("Username");
+                                var result = DevExpress.ui.dialog.confirm("Are you sure alrady give " + employee.PART_NUMBER + "Quantity " + RequestQuantitys + "To"+user+"?", "Confirm Sure");
+
+                                result.done(function (dialogResult) {
+
+                                    if (dialogResult == true) {
+
+                                        if (Quantitys < RequestQuantitys) {
+                                            DevExpress.ui.notify("Quantity invalid");
+                                        }
+                                        else {
+                                            var TakeQuentitys = Quantitys - RequestQuantitys;
+                                            var a = dataGrid.getRowIndexByKey(employee.STOCKID)
+                                            console.log("take quan"+TakeQuentitys)
+                                            console.log("row index"+dataGrid.getRowIndexByKey(employee.STOCKID))
+                                            
+                                            dataGrid.cellValue(a, "QUANTITY", TakeQuentitys);
+                                            dataGrid.saveEditData();
+
+                                            var settings = {
+                                                "url": "https://192.168.8.138:4001/api/Notification/UpdateStatus/" + employee.NOTIFICATIONS_ID,
+                                                "method": "PUT",
+                                                "timeout": 0,
+                                                "headers": {
+                                                    "Authorization": "Bearer " + sessionStorage.getItem("Token"),
+                                                    "Content-Type": "application/json"
+                                                },
+                                                "data": JSON.stringify({
+                                                    "NOTIFICATIONS_ID": employee.NOTIFICATIONS_ID,
+                                                    "READ": 0
+                                                }),
+                                            };
+
+                                            $.ajax(settings).done(function (response) {                                                                                            
+                                                msgRequestPopup();
+                                                $("#MsgPopupData").dxPopup("hide")
+                                                //msgList.option("dataSource", listData)
+                                                refdata = 1
+                                                
+                                               
+                                                
+                                            });
+                                            
+                                            //gridInstance.selectRowsByIndexes([visibleRowIndex]);
+                                            dataGrid.option("focusedRowKey", employee.STOCKID)
+                                        }
+
+
+                                    
+
+                                    }
+                                });
+
+                          
+                            },
+                        },
+                    }, {
+                        widget: 'dxButton',
+                        toolbar: 'bottom',
+                        location: 'after',
+                        options: {
+                            text: 'Close',
+                            onClick() {
+                                popupMsgData.hide();
+                            },
+                        },
+                        }],
+                    onContentReady: HideUpdateButton
+                }).dxPopup("instance");
+
+                function HideUpdateButton(e) {
+
+                    if (employee.READ == 0) {
+                        e.component.option('toolbarItems[0].visible', false);
+                    }
+                    else {
+                        e.component.option('toolbarItems[0].visible', true);
+                    }
+                }
+
+                function showeyeToolbar() {
+                    var pass = $("#PASSWORDtoolbar").dxTextBox("instance").option("value")          
+                    var passwordEditor = $("#PASSWORDtoolbar").dxTextBox("instance");
+                    var passCondition = passwordEditor.option("mode")
+                    if (pass != "" && passCondition === "password") {
+                        $("#show_password").dxButton("instance").option("visible", true);
+                    }
+                    else if (pass != "" && passCondition === "text") {
+
+                        $("#hide_password").dxButton("instance").option("visible", true);
+                    }
+                    else {
+
+                        $("#show_password").dxButton("instance").option("visible", false);
+                        $("#hide_password").dxButton("instance").option("visible", false);
+                    }
+                }
+
+                function show_password() {
+                    var passwordEditor = $("#PASSWORDtoolbar").dxTextBox("instance");
+                    passwordEditor.option("mode", passwordEditor.option("mode") === "text" ? "password" : "text");
+
+                    $("#show_password").dxButton("instance").option("visible", false);
+                    $("#hide_password").dxButton("instance").option("visible", true);
+
+                }
+
+                function hide_password() {
+                    var passwordEditor = $("#PASSWORDtoolbar").dxTextBox("instance");
+
+                    passwordEditor.option("mode", passwordEditor.option("mode") === "text" ? "password" : "text");
+                    $("#show_password").dxButton("instance").option("visible", true);
+                    $("#hide_password").dxButton("instance").option("visible", false);
+
+                }
+
+                function Toolbarlogin() {
+
+                    var user = $("#USERNAMEtoolbar").dxTextBox("instance").option("value")
+                    var pass = $("#PASSWORDtoolbar").dxTextBox("instance").option("value")
+
+                    var settings = {
+
+                        "url": "/users/authenticate",
+                        "method": "POST",
+                        "timeout": 0,
+                        "headers": {
+
+                            "Content-Type": "application/json"
+                        },
+                        statusCode: {
+
+                            200: function () {
+
+                                window.location.href = window.location;
+                            }
+                        },
+                        "data": JSON.stringify({ "username": user, "password": pass }),
+
+                    };
+
+
+                    $.ajax(settings).done(function (data) {
+
+
+                        sessionStorage.setItem("Token", data.Token);
+                        sessionStorage.setItem("Role", data.Role);
+                        sessionStorage.setItem("Username", data.Username);
+
+                        DevExpress.ui.notify({
+                            message: "Success Login, Hello! " + sessionStorage.getItem("Username"),
+                            position: { my: "top", at: "top", of: $('#Windows') },
+                            width: 300,
+                            shading: false
+                        }, "Success", 5000);
+
+
+                    })
+                        .fail(function (data) {
+
+                            DevExpress.ui.notify({
+                                message: "Username or Password is invalid",
+                                position: { my: "top", at: "top", of: $('#Windows') },
+                                width: 300,
+                                shading: false
+                            }, "error", 5000);
+
+                            //window.location.href = window.location;
+
+
+
+                        });
+
+
+
+
+
+
+
+
+                }
+
+                function UsernameDisplay() {
+
+                    if (sessionStorage.getItem("Token") != null) {
+                        toolbar
+                        return "Hello! " + sessionStorage.getItem("Username")
+                    }
+                    else {
+                        return ""
+                    }
+                };
+
+                function Remove_Token() {
+
+
+                    sessionStorage.removeItem("Token")
+                    sessionStorage.removeItem("Username")
+                    sessionStorage.removeItem("Role")
+                    window.location.href = window.location;
+
+                };
+                //function getitem() {
+
+                //    $("#toolbar").dxToolbar({
+                //        items: [
+                //            {
+                //                text: 'Add',
+                //                location: 'after'
+                //            }]
+                //    })("instance");
+
+                //};
+                $(function () {
+
+                    
+                   
+
+
+                    if (sessionStorage.getItem("Token") != null) {
+
+                        $("#LogOut").dxButton("instance").option("visible", true);
+                        $("#LogIn").dxButton("instance").option("visible", false);
+                       
+
+                        var timer;
+                        document.onmousemove = resetTimer;
+                        document.onkeypress = resetTimer;
+
+
+                        function resetTimer() {
+                            clearTimeout(timer);
+                            timer = setTimeout(Remove_Token, 600000)
+
+                        }
+                    }
+
+                    if (sessionStorage.getItem("Username") == "Admin") {
+
+                        $("#LogIn2").dxButton("instance").option("visible", true);
+
+                        var timer;
+                        document.onmousemove = resetTimer;
+                        document.onkeypress = resetTimer;
+
+
+                        function resetTimer() {
+                            clearTimeout(timer);
+                            timer = setTimeout(Remove_Token, 600000)
+
+                        }
+                    }
+
+
+                });
+
+                var DevExtremeAspNetCoreApp11 = (function () {
+
+                    var DRAWER_OPENED_KEY = "DevExtremeAspNetCoreApp11-drawer-opened";
+
+                    var breakpoints = {
+                        xSmallMedia: window.matchMedia("(max-width: 599.99px)"),
+                        smallMedia: window.matchMedia("(min-width: 600px) and (max-width: 959.99px)"),
+                        mediumMedia: window.matchMedia("(min-width: 960px) and (max-width: 1279.99px)"),
+                        largeMedia: window.matchMedia("(min-width: 1280px)")
+                    };
+
+                    function getDrawer() {
+                        return $("#layout-drawer").dxDrawer("instance");
+                    }
+
+                    //function restoreDrawerOpened() {
+                    //    var isLarge = breakpoints.largeMedia.matches;
+                    //    if (!isLarge)
+                    //        return false;
+                    //    if (isLarge)
+                    //        return true;
+                    //    var state = sessionStorage.getItem(DRAWER_OPENED_KEY);
+                    //    if (state === null)
+                    //        return isLarge;
+                    //    return state === "true";
+
+
+
+                    //}
+
+                    function restoreDrawerOpened() {
+                        var isLarge = breakpoints.largeMedia.matches;
+                        if (!isLarge)
+                            return false;
+
+                        var state = sessionStorage.getItem(DRAWER_OPENED_KEY);
+                        if (state === null)
+                            return isLarge;
+
+                        return state === "true";
+                    }
+
+                    function saveDrawerOpened() {
+                        sessionStorage.setItem(DRAWER_OPENED_KEY, getDrawer().option("opened"));
+                    }
+
+                    function updateDrawer() {
+                        var isXSmall = breakpoints.xSmallMedia.matches,
+                            isLarge = breakpoints.largeMedia.matches;
+
+                        getDrawer().option({
+                            openedStateMode: isLarge ? "shrink" : "overlap",
+                            revealMode: isXSmall ? "slide" : "expand",
+                            minSize: isXSmall ? 0 : 60,
+                            shading: !isLarge,
+                        });
+                    }
+
+                    function init() {
+                        $("#layout-drawer-scrollview").dxScrollView({ direction: "vertical" });
+
+                        $.each(breakpoints, function (_, size) {
+                            size.addListener(function (e) {
+                                if (e.matches)
+                                    updateDrawer();
+                            });
+                        });
+
+                        updateDrawer();
+
+                        $('.layout-body').removeClass('layout-body-hidden');
+                    }
+
+                    function navigate(url, delay) {
+                        if (url)
+                            setTimeout(function () { location.href = url }, delay);
+                    }
+
+                    function onMenuButtonClick() {
+                        getDrawer().toggle();
+                        saveDrawerOpened();
+                    }
+
+                    function onTreeViewItemClick(e) {
+                        var drawer = getDrawer();
+                        var savedOpened = restoreDrawerOpened();
+                        var actualOpened = drawer.option("opened");
+
+                        if (!actualOpened) {
+                            drawer.show();
+                        } else {
+                            var willHide = !savedOpened || !breakpoints.largeMedia.matches;
+                            var willNavigate = !e.itemData.selected;
+
+                            if (willHide)
+                                drawer.hide();
+
+                            if (willNavigate)
+                                navigate(e.itemData.path, willHide ? 400 : 0);
+                        }
+                    }
+
+                    return {
+                        init: init,
+                        restoreDrawerOpened: restoreDrawerOpened,
+                        onMenuButtonClick: onMenuButtonClick,
+                        onTreeViewItemClick: onTreeViewItemClick
+                    };
+                })();
+
+                document.addEventListener("DOMContentLoaded", function documentReady() {
+                    this.removeEventListener("DOMContentLoaded", documentReady);
+                    DevExtremeAspNetCoreApp11.init();
+                });
+            </script>
+</body>
+
+</html>
